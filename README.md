@@ -41,15 +41,15 @@ heroku config:set SECURITY_SALT=[your-security-salt]
 
 Create a MySQL database:
 ```bash
-heroku addons:add cleardb
+heroku addons:create cleardb
 old_db_url=`heroku config:get CLEARDB_DATABASE_URL`
 heroku config:set DATABASE_URL="$old_db_url"
 ```
 
 Configure logs:
 ```bash
-heroku config:set LOG_URL=console:///?levels[]=notice&levels[]=info&levels[]=debug
-heroku config:set LOG_ERROR_URL=console:///?levels[]=warning&levels[]=error&levels[]=critical&levels[]=alert&levels[]=emergency
+heroku config:set LOG_URL="console:///?levels[]=notice&levels[]=info&levels[]=debug"
+heroku config:set LOG_ERROR_URL="console:///?levels[]=warning&levels[]=error&levels[]=critical&levels[]=alert&levels[]=emergency"
 ```
 
 ### Notes

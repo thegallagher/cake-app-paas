@@ -19,7 +19,8 @@
     },
     "suggest": {
         "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
-        "cakephp/cakephp-codesniffer": "Allows to check the code against the coding standards used in CakePHP."
+        "cakephp/cakephp-codesniffer": "Allows to check the code against the coding standards used in CakePHP.",
+        "friendsofcake/crud": "CakePHP Application development on steroids - rapid prototyping / scaffolding & production ready code,"
     },
     "autoload": {
         "psr-4": {

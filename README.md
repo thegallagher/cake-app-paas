@@ -24,6 +24,10 @@ the setup traffic lights.
 Configuration is done with environment variables or in `config/.env`.
 You can read `config/.env` for information on the available variables.
 
+If you followed the above installation instructions to create your project, you will be asked to create `config/.env`.
+If you were not in interactive mode, you will need to use environment variables or `cp config/default.env config/.env`.
+
+
 You may use any of the constants in `config/paths.php` by
 prefixing and suffixing the constant with two underscores (`__`).
 Eg. To use the `LOGS` constant, write `__LOGS__` in the environment variable.

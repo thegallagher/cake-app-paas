@@ -25,26 +25,7 @@ class Installer
 {
 
     /**
-     * Whether the install tasks have run yet
-     *
-     * @var bool
-     */
-    protected static $installed = false;
-
-    /**
-     * Called when a project is created.
-     *
-     * @param \Composer\Script\Event $event The composer event object.
-     * @throws \Exception Exception raised by validator.
-     * @return void
-     */
-    public static function postCreateProject(Event $event)
-    {
-        self::installTasks($event);
-    }
-
-    /**
-     * Called when a project is installed.
+     * Does some routine installation tasks so people don't have to.
      *
      * @param \Composer\Script\Event $event The composer event object.
      * @throws \Exception Exception raised by validator.
@@ -52,28 +33,10 @@ class Installer
      */
     public static function postInstall(Event $event)
     {
-        self::installTasks($event);
-    }
-
-    /**
-     * Does some routine installation tasks so people don't have to.
-     *
-     * @param \Composer\Script\Event $event The composer event object.
-     * @throws \Exception Exception raised by validator.
-     * @return void
-     */
-    public static function installTasks(Event $event)
-    {
-        if (self::$installed) {
-            return;
-        }
-
         $io = $event->getIO();
 
         $rootDir = dirname(dirname(__DIR__));
         static::createWritableDirectories($rootDir, $io);
-
-        $dotEnvCreate = $event->getName() === 'post-create-project-cmd';
 
         // ask if the permissions should be changed
         if ($io->isInteractive()) {
@@ -84,21 +47,19 @@ class Installer
                 throw new Exception('This is not a valid answer. Please choose Y or n.');
             };
 
-            $dotEnvDefault = 'N';
-            $dotEnvComment = 'y,N';
-            if ($dotEnvCreate) {
-                $dotEnvDefault = 'Y';
-                $dotEnvComment = 'Y,n';
-            }
-            $createDotEnv = $io->askAndValidate(
-                '<info>Create .env configuration file ? (Default to ' . $dotEnvDefault . ')</info> [<comment>' . $dotEnvComment . '</comment>]? ',
-                $validator,
-                10,
-                'Y'
-            );
+            if (!file_exists($rootDir . '/config/.env')) {
+                $createDotEnv = $io->askAndValidate(
+                    '<info>Create .env configuration file ? (Default to Y)</info> [<comment>Y,n</comment>]? ',
+                    $validator,
+                    10,
+                    'Y'
+                );
 
-            if (in_array($createDotEnv, ['Y', 'y'])) {
-                static::createAppConfig($rootDir, $io);
+                if (in_array($createDotEnv, ['Y', 'y'])) {
+                    static::createAppConfig($rootDir, $io);
+                }
+
+                static::setSecuritySalt($rootDir, $io);
             }
 
             $setFolderPermissions = $io->askAndValidate(
@@ -113,12 +74,7 @@ class Installer
             }
         } else {
             static::setFolderPermissions($rootDir, $io);
-            if ($dotEnvCreate) {
-                static::createAppConfig($rootDir, $io);
-            }
         }
-
-        static::setSecuritySalt($rootDir, $io);
 
         if (class_exists('\Cake\Codeception\Console\Installer')) {
             \Cake\Codeception\Console\Installer::customizeCodeceptionBinary($event);

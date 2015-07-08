@@ -1,6 +1,6 @@
 {
-    "name": "cakephp/app",
-    "description": "CakePHP skeleton app",
+    "name": "thegallagher/cakephp-app-paas",
+    "description": "CakePHP skeleton app for Paas / Heroku",
     "homepage": "http://cakephp.org",
     "type": "project",
     "license": "MIT",

@@ -1,7 +1,7 @@
 {
     "name": "thegallagher/cakephp-app-paas",
     "description": "CakePHP skeleton app for Paas / Heroku",
-    "homepage": "http://cakephp.org",
+    "homepage": "https://github.com/thegallagher/cake-app-paas",
     "type": "project",
     "license": "MIT",
     "require": {

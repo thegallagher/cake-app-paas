@@ -7,11 +7,11 @@ The framework source code can be found here: [cakephp/cakephp](https://github.co
 ## Installation
 
 1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist thegallagher/cakephp-app-paas [app_name] --repository-url=https://github.com/thegallagher/cake-app-paas.git`.
+2. Run `php composer.phar create-project --prefer-dist thegallagher/cakephp-app-paas [app_name]`.
 
 If Composer is installed globally, run
 ```bash
-composer create-project --prefer-dist thegallagher/cakephp-app-paas [app_name] --repository-url=https://github.com/thegallagher/cake-app-paas.git
+composer create-project --prefer-dist thegallagher/cakephp-app-paas [app_name]
 ```
 
 You should now be able to visit the path to where you installed the app and see

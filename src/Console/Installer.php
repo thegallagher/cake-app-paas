@@ -70,7 +70,7 @@ class Installer
     }
 
     /**
-     * Create the config/app.php file if it does not exist.
+     * Create the config/.env file if it does not exist.
      *
      * @param string $dir The application's root directory.
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
@@ -78,11 +78,11 @@ class Installer
      */
     public static function createAppConfig($dir, $io)
     {
-        $appConfig = $dir . '/config/app.php';
-        $defaultConfig = $dir . '/config/app.default.php';
+        $appConfig = $dir . '/config/.env';
+        $defaultConfig = $dir . '/config/default.env';
         if (!file_exists($appConfig)) {
             copy($defaultConfig, $appConfig);
-            $io->write('Created `config/app.php` file');
+            $io->write('Created `config/.env` file');
         }
     }
 
@@ -171,7 +171,7 @@ class Installer
      */
     public static function setSecuritySalt($dir, $io)
     {
-        $config = $dir . '/config/app.php';
+        $config = $dir . '/config/.env';
         $content = file_get_contents($config);
 
         $newKey = hash('sha256', $dir . php_uname() . microtime(true));
@@ -184,7 +184,7 @@ class Installer
 
         $result = file_put_contents($config, $content);
         if ($result) {
-            $io->write('Updated Security.salt value in config/app.php');
+            $io->write('Updated Security.salt value in config/.env');
             return;
         }
         $io->write('Unable to update Security.salt value.');

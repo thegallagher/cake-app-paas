@@ -1,4 +1,7 @@
 <?php
+
+use App\Configure\EnvConfigure as Env;
+
 return [
     /**
      * Debug Level:
@@ -9,7 +12,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => true,
+    'debug' => (bool) Env::read('DEBUG', '0'),
 
     /**
      * Configure basic information about the application.
@@ -62,7 +65,7 @@ return [
      *   You should treat it as extremely sensitive data.
      */
     'Security' => [
-        'salt' => '__SALT__',
+        'salt' => Env::read('SECURITY_SALT'),
     ],
 
     /**
@@ -81,10 +84,7 @@ return [
      * Configure the cache adapters.
      */
     'Cache' => [
-        'default' => [
-            'className' => 'File',
-            'path' => CACHE,
-        ],
+        'default' => ['url' => Env::read('CACHE_URL', 'file:///?path=__CACHE__')],
 
         /**
          * Configure the cache used for general framework caching. Path information,
@@ -92,11 +92,10 @@ return [
          * configuration.
          */
         '_cake_core_' => [
-            'className' => 'File',
-            'prefix' => 'myapp_cake_core_',
-            'path' => CACHE . 'persistent/',
-            'serialize' => true,
-            'duration' => '+2 minutes',
+            'url' => Env::read(
+                'CACHE_CAKE_CORE_URL',
+                'file:///?path=__CACHE__persistent/&prefix=myapp_cake_core_&duration=%2b2+minutes'
+            )
         ],
 
         /**
@@ -105,11 +104,10 @@ return [
          * in connections.
          */
         '_cake_model_' => [
-            'className' => 'File',
-            'prefix' => 'myapp_cake_model_',
-            'path' => CACHE . 'models/',
-            'serialize' => true,
-            'duration' => '+2 minutes',
+            'url' => Env::read(
+                'CACHE_CAKE_MODEL_URL',
+                'file:///?path=__CACHE__models/&prefix=myapp_cake_model_&duration=%2b2+minutes'
+            )
         ],
     ],
 
@@ -150,11 +148,15 @@ return [
     /**
      * Email configuration.
      *
+     * You can configure email transports and email delivery profiles here.
+     *
      * By defining transports separately from delivery profiles you can easily
      * re-use transport configuration across multiple profiles.
      *
      * You can specify multiple configurations for production, development and
      * testing.
+     *
+     * ### Configuring transports
      *
      * Each transport needs a `className`. Valid options are as follows:
      *
@@ -165,23 +167,8 @@ return [
      * You can add custom transports (or override existing transports) by adding the
      * appropriate file to src/Network/Email.  Transports should be named
      * 'YourTransport.php', where 'Your' is the name of the transport.
-     */
-    'EmailTransport' => [
-        'default' => [
-            'className' => 'Mail',
-            // The following keys are used in SMTP transports
-            'host' => 'localhost',
-            'port' => 25,
-            'timeout' => 30,
-            'username' => 'user',
-            'password' => 'secret',
-            'client' => null,
-            'tls' => null,
-        ],
-    ],
-
-    /**
-     * Email delivery profiles
+     *
+     * ### Configuring delivery profiles
      *
      * Delivery profiles allow you to predefine various properties about email
      * messages from your application and give the settings a name. This saves
@@ -189,6 +176,10 @@ return [
      * easier. Each profile accepts a number of keys. See `Cake\Network\Email\Email`
      * for more information.
      */
+    'EmailTransport' => [
+        'default' => ['url' => Env::read('EMAIL_URL', 'mail:///')],
+    ],
+
     'Email' => [
         'default' => [
             'transport' => 'default',
@@ -206,60 +197,20 @@ return [
      */
     'Datasources' => [
         'default' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
-            'persistent' => false,
-            'host' => 'localhost',
-            /**
-             * CakePHP will use the default DB port based on the driver selected
-             * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
-             * the following line and set the port accordingly
-             */
-            //'port' => 'nonstandard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'my_app',
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
-            'cacheMetadata' => true,
-
-            /**
-             * Set identifier quoting to true if you are using reserved words or
-             * special characters in your table or column names. Enabling this
-             * setting will result in queries built using the Query Builder having
-             * identifiers quoted when creating SQL. It should be noted that this
-             * decreases performance because each query needs to be traversed and
-             * manipulated before being executed.
-             */
-            'quoteIdentifiers' => false,
-
-            /**
-             * During development, if using MySQL < 5.6, uncommenting the
-             * following line could boost the speed at which schema metadata is
-             * fetched from the database. It can also be set directly with the
-             * mysql configuration directive 'innodb_stats_on_metadata = 0'
-             * which is the recommended value in production environments
-             */
-            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
+            'url' => Env::read(
+                'DATABASE_URL',
+                'mysql://my_app:secret@localhost?database=my_app&timezone=UTC&cacheMetadata=1'
+            )
         ],
 
         /**
          * The test connection is used during the test suite.
          */
         'test' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
-            'persistent' => false,
-            'host' => 'localhost',
-            //'port' => 'nonstandard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'test_myapp',
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
-            'cacheMetadata' => true,
-            'quoteIdentifiers' => false,
-            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
+            'url' => Env::read(
+                'DATABASE_TEST_URL',
+                'mysql://my_app:secret@localhost?database=test_myapp&timezone=UTC&cacheMetadata=1'
+            )
         ],
     ],
 
@@ -268,20 +219,21 @@ return [
      */
     'Log' => [
         'debug' => [
-            'className' => 'Cake\Log\Engine\FileLog',
-            'path' => LOGS,
-            'file' => 'debug',
-            'levels' => ['notice', 'info', 'debug'],
+            'url' => Env::read(
+                'LOG_URL',
+                'file:///?path=__LOGS__&file=debug&levels[]=notice&levels[]=info&levels[]=debug'
+            )
         ],
         'error' => [
-            'className' => 'Cake\Log\Engine\FileLog',
-            'path' => LOGS,
-            'file' => 'error',
-            'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
+            'url' => Env::read(
+                'LOG_ERROR_URL',
+                'file:///?path=__LOGS__&file=error&levels[]=warning&levels[]=error&levels[]=critical&levels[]=alert&levels[]=emergency'
+            )
         ],
     ],
 
     /**
+     *
      * Session configuration.
      *
      * Contains an array of settings to use for session configuration. The

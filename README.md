@@ -1,5 +1,7 @@
 # CakePHP Application Skeleton for PaaS / Heroku
 
+__This is a fork of [CakePHP Application Skeleton](https://github.com/cakephp/app).__
+
 A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.0.
 
 The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
@@ -54,3 +56,8 @@ heroku config:set LOG_ERROR_URL=console:///?levels[]=warning&levels[]=error&leve
 
 - If you require multiple instances of your web process, you will need to
   configure your sessions to use database or cache.
+
+## Credits
+
+- Most of the code in this repository is from [CakePHP Application Skeleton](https://github.com/cakephp/app).
+- A lot of ideas and code borrowed from [Friends Of Cake App Template](https://github.com/FriendsOfCake/app-template).

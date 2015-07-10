@@ -12,8 +12,8 @@
  */
 namespace App\Configure;
 
-use Dotenv\Dotenv;
 use Cake\Utility\Text;
+use Dotenv\Dotenv;
 
 /**
  * Read config from .env files or the environment
@@ -59,7 +59,7 @@ class EnvConfigure
         if ($value === null && $default === null) {
             throw new \RuntimeException(sprintf('Environment variable \'%s\' cannot be empty.', $key));
         }
-        return self::insertConstants($value === null ? $default : $value);
+        return self::_insertConstants($value === null ? $default : $value);
     }
 
     /**
@@ -90,7 +90,7 @@ class EnvConfigure
      *
      * @return string `$str` with constant names replaced with constant values
      */
-    protected static function insertConstants($str)
+    protected static function _insertConstants($str)
     {
         foreach (self::$replaceConstants as $key => $constant) {
             if (is_int($key)) {

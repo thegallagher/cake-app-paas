@@ -12,7 +12,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => (bool) Env::read('DEBUG', '0'),
+    'debug' => (bool)Env::read('DEBUG', '0'),
 
     /**
      * Configure basic information about the application.

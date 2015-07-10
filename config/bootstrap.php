@@ -187,7 +187,8 @@ Plugin::load('Migrations');
 if (Configure::read('debug')) {
     try {
         Plugin::load('DebugKit', ['bootstrap' => true]);
-    } catch (\Cake\Core\Exception\MissingPluginException $e) { }
+    } catch (\Cake\Core\Exception\MissingPluginException $e) {
+    }
 }
 
 /**
